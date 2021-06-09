@@ -5,12 +5,12 @@
 \title{GetGenome
 return a list with the slots fasta and gtf with the full path to the genomes and annotation files}
 \usage{
-GetGenome(specie, version)
+GetGenome(species, version)
 }
 \arguments{
-\item{specie}{the stored specie (Human" etc..)}
+\item{version}{"the assembly+annotation version/code}
 
-\item{version}{"the assembly+annotation verion/code}
+\item{specie}{the stored specie (Human" etc..)}
 }
 \description{
 GetGenome

@@ -162,7 +162,9 @@ AddHumanGenomes <- function(urlFasta, urlGTF,version){
     AddGenome(species = "Human",
               urlFasta = "ftp://ftp.ensembl.org/pub/release-104/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz",
               urlGTF ="ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_38/gencode.v38.annotation.gtf.gz",
-              version = "GRCh38+GENCODE")
+              version = "GRCh38+GENECODE")
+    gen.files <- GetGenome("GRCh38+GENECODE")
+
   }else{
     AddGenome(species = "Human",
               urlFasta = urlFasta,
@@ -175,7 +177,7 @@ AddHumanGenomes <- function(urlFasta, urlGTF,version){
 #' GetGenome
 #' return a list with the slots fasta and gtf with the full path to the genomes and annotation files
 #' @param specie the stored specie (Human" etc..)
-#' @param version "the assembly+annotation verion/code
+#' @param version "the assembly+annotation version/code
 #' @export
 GetGenome <- function(species, version){
   databases <- GenomeDB:::.OpenConfigFile()
