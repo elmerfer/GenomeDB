@@ -181,7 +181,7 @@ AddHumanGenomes <- function(urlFasta, urlGTF,version){
 #' @export
 GetGenome <- function(species, version){
   databases <- GenomeDB:::.OpenConfigFile()
-  if(all(stringr:.str_detect(names(database$GenomesDB[[species]]$version,version)))==FALSE){
+  if(all(stringr:.str_detect(names(databases$GenomesDB[[species]]$version),version))==FALSE){
     stop(paste0("\nThe ", specie, " and ", version, " is not in the Database\nAvailable versions are: ", names(database$GenomesDB[[species]]$version)))
   }
   if(dir.exists(file.path(databases$GenomesDB[[species]]$main,version))==FALSE){
