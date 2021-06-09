@@ -89,7 +89,7 @@ AddGenome <- function(species, urlFasta, urlGTF, version){
     message(paste0("\nThe ",species, " specie does not exist in your Genomes Database"))
   }
   ##aqui agrego la especie a la lista, luego ya la puedo agregar con $
-  software$GenomesDB[[species]]$main <- list(main=file.path(software$GenomesDB,species))
+  software$GenomesDB[[species]]$main <- file.path(software$GenomesDB,species)
   #-------------------------
   if(dir.exists(software$GenomesDB[[species]]$main)==FALSE){
     if(dir.create(software$GenomesDB[[species]]$main)==FALSE){
