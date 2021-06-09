@@ -186,7 +186,7 @@ GetGenome <- function(species, version){
     stop(paste0("\nThe ", specie, " and ", version, " is not in the Database\nAvailable versions are: ", names(database$GenomesDB[[species]]$version)))
   }
   if(dir.exists(file.path(databases$GenomesDB[[species]]$main,version))==FALSE){
-    stop(paste0("\nGenome for ",specie, " version ", version, " NOT FOUND"))
+    stop(paste0("\nGenome for ",species, " version ", version, " NOT FOUND"))
   }
   fasta.gtf.files <- list.files(file.path(databases$GenomesDB[[species]]$main,version), full.names = TRUE)
   fasta <- fasta.gtf.files[stringr::str_detect(fasta.gtf.files,".fasta|.fa")]
