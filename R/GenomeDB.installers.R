@@ -138,6 +138,7 @@ AddGenome <- function(species, urlFasta, urlGTF, version){
                 destfile = file.path(software$GenomesDB[[species]]$version[version],paste0(version,"_",basename(urlGTF))),
                 extra = "--quiet"
   )
+
   if(file.exists(file.path(software$GenomesDB[[species]]$version[version],paste0(version,"_",basename(urlGTF))))){
     if(stringr::str_detect(file.path(software$GenomesDB[[species]]$version[version],paste0(version,"_",basename(urlGTF))), ".gz")){
       R.utils::gunzip(filename = file.path(software$GenomesDB[[species]]$version[version],paste0(version,"_",basename(urlGTF))),
@@ -163,7 +164,8 @@ AddHumanGenomes <- function(urlFasta, urlGTF,version){
               urlFasta = "ftp://ftp.ensembl.org/pub/release-104/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz",
               urlGTF ="ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_38/gencode.v38.annotation.gtf.gz",
               version = "GRCh38+GENECODE")
-    gen.files <- GetGenome("GRCh38+GENECODE")
+    gen.files <- GetGenome("Human","GRCh38+GENECODE")
+    .ValidateGenoemGTF(gen.files)
 
   }else{
     AddGenome(species = "Human",
@@ -181,9 +183,9 @@ AddHumanGenomes <- function(urlFasta, urlGTF,version){
 #' @export
 GetGenome <- function(species, version){
   databases <- GenomeDB:::.OpenConfigFile()
-  if(all(stringr::str_detect(names(databases$GenomesDB[[species]]$version),version))==FALSE){
+  if(all(version %in% names(databases$GenomesDB[[species]]$version))==FALSE){
 
-    stop(paste0("\nThe ", specie, " and ", version, " is not in the Database\nAvailable versions are: ", names(database$GenomesDB[[species]]$version)))
+    stop(paste0("\nThe ", species, " and ", version, " is not in the Database\nAvailable versions are: ", names(database$GenomesDB[[species]]$version)))
   }
   if(dir.exists(file.path(databases$GenomesDB[[species]]$main,version))==FALSE){
     stop(paste0("\nGenome for ",species, " version ", version, " NOT FOUND"))
@@ -193,4 +195,33 @@ GetGenome <- function(species, version){
   gtf <- fasta.gtf.files[stringr::str_detect(fasta.gtf.files,".gtf")]
   return(list(fasta=fasta,gtf=gtf))
 }
+
+#' .ValidateGenoemGTF
+#' This function check that fasta genome file and GTF annotation file has the same chromosome identification code
+#' This should not be used directly (only internal)
+#' @param fileGenomeGTF see \code{\link{GetGenome}}
+#'
+.ValidateGenoemGTF <- function(filesGenomeGTF){
+  # filesGenomeGTF <- GenomeDB::GetGenome("Human","GRCh38+GENECODE")
+  if(any(file.exists(unlist(filesGenomeGTF)))==FALSE){
+    stop(".ValidateGenoemGTF")
+  }
+
+
+  hay.chr.fa <- ifelse(as.numeric(system2("grep", args = c("-c", "'^>chr'", filesGenomeGTF$fasta), stdout = TRUE, stderr = NULL))>0,TRUE,FALSE)
+  hay.chr.gtf <- ifelse(as.numeric(system2("grep", args = c("-c", "'^chr'", filesGenomeGTF$gtf), stdout = TRUE))>0,TRUE,FALSE)
+
+  if(hay.chr.fa == FALSE & hay.chr.gtf == TRUE){
+    ##ho hay chr en fasta y si en GTF => borramos el chr en el GTF
+    message("\nThe genome fasta file does not have chr, thus eliminating from GTF")
+    system(paste0("sed -e 's/^chrM\t/MT\t/' -e 's/^chr//' ", filesGenomeGTF$gtf, " > ", filesGenomeGTF$gtf,".n"))
+    file.remove(filesGenomeGTF$gtf)
+    file.rename(from = paste0(filesGenomeGTF$gtf,".n") , to = filesGenomeGTF$gtf)
+  }
+  # if(hay.chr == TRUE & hay.chr.gtf == FALSE){
+  #   #hay chr en el fasta y no en el gtf => lo ponemos en el gtf
+  #   system(paste0("sed -e 's/^MT\t/chrM\t/' -e 's/^[1-9XY]\t/chr[1-9XY]\t'", filesGenomeGTF$gtf,".gtf2 > ",filesGenomeGTF$gtf,".gtf3"))
+  # }
+}
+
 
