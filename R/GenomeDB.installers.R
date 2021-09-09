@@ -89,7 +89,8 @@ AddGenome <- function(species, urlFasta, urlGTF, version){
     message(paste0("\nThe ",species, " specie does not exist in your Genomes Database"))
   }
   ##aqui agrego la especie a la lista, luego ya la puedo agregar con $
-  software$GenomesDB[[species]]$main <- file.path(software$GenomesDB,species)
+  ## software$GenomesDB es una estructura, donde en "main" esta el parh root
+  software$GenomesDB[[species]]$main <- file.path(software$GenomesDB$main,species)
   #-------------------------
   if(dir.exists(software$GenomesDB[[species]]$main)==FALSE){
     if(dir.create(software$GenomesDB[[species]]$main)==FALSE){
@@ -165,7 +166,7 @@ AddHumanGenomes <- function(urlFasta, urlGTF,version){
               urlGTF ="ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_38/gencode.v38.annotation.gtf.gz",
               version = "GRCh38+GENECODE")
     gen.files <- GetGenome("Human","GRCh38+GENECODE")
-    .ValidateGenoemGTF(gen.files)
+    .ValidateGenomeGTF(gen.files)
 
   }else{
     AddGenome(species = "Human",
@@ -196,15 +197,15 @@ GetGenome <- function(species, version){
   return(list(fasta=fasta,gtf=gtf))
 }
 
-#' .ValidateGenoemGTF
+#' .ValidateGenomeGTF
 #' This function check that fasta genome file and GTF annotation file has the same chromosome identification code
 #' This should not be used directly (only internal)
 #' @param fileGenomeGTF see \code{\link{GetGenome}}
 #'
-.ValidateGenoemGTF <- function(filesGenomeGTF){
+.ValidateGenomeGTF <- function(filesGenomeGTF){
   # filesGenomeGTF <- GenomeDB::GetGenome("Human","GRCh38+GENECODE")
   if(any(file.exists(unlist(filesGenomeGTF)))==FALSE){
-    stop(".ValidateGenoemGTF")
+    stop(".ValidateGenomeGTF")
   }
 
 
@@ -225,3 +226,19 @@ GetGenome <- function(species, version){
 }
 
 
+#' GetGenomesInDB
+#' return the available genomes in the Database
+#' @export
+#' @usage genome.list <- GetGenomesInDB()
+GetGenomesInDB <- function(){
+  databases <- GenomeDB:::.OpenConfigFile()
+  gms <- names(databases$GenomesDB)[-1]
+  ret <- NULL
+  if(length(gms)>0){
+    ret <- lapply(gms,function(x){
+      databases$GenomesDB[[x]]
+    })
+    names(ret) <- gms
+  }
+  return(ret)
+}
