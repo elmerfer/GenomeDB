@@ -7,7 +7,28 @@ return the available genomes in the Database}
 \usage{
 genome.list <- GetGenomesInDB()
 }
+\value{
+It returns a named nested list of the available genomes per species.
+Inside each species slots, an slot
+named "main" with the main path
+and an slot named "version" :
+a named vector with each genome-annotation  directory
+}
 \description{
 GetGenomesInDB
 return the available genomes in the Database
+}
+\examples{
+\dontrun{
+genome.list <- GetGenomesInDB()
+genome.list
+$Human
+$Human$main
+[1] "/media/respaldo4t/GenomesDB/Human"
+
+GRCh38+GENECODE                                                     GRCh37+GENECODE19
+"/media/respaldo4t/GenomesDB/Human/GRCh38+GENECODE"                 "/media/respaldo4t/GenomesDB/Human/GRCh37+GENECODE19"
+<NA>
+  "/media/respaldo4t/GenomesDB/Human/GRCh38+GENECODE/GRCh37+GENECODE19"
+}
 }

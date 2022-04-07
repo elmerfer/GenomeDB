@@ -89,8 +89,11 @@ AddGenome <- function(species, urlFasta, urlGTF, version){
     message(paste0("\nThe ",species, " specie does not exist in your Genomes Database"))
   }
   ##aqui agrego la especie a la lista, luego ya la puedo agregar con $
-  ## software$GenomesDB es una estructura, donde en "main" esta el parh root
-  software$GenomesDB[[species]]$main <- file.path(software$GenomesDB$main,species)
+  ## software$GenomesDB es una estructura, donde en "main" esta el path root
+  if(is.null(software$GenomesDB[[species]]$main)){
+    software$GenomesDB[[species]]$main <- file.path(software$GenomesDB$main,species)
+  }
+
   #-------------------------
   if(dir.exists(software$GenomesDB[[species]]$main)==FALSE){
     if(dir.create(software$GenomesDB[[species]]$main)==FALSE){
@@ -107,7 +110,8 @@ AddGenome <- function(species, urlFasta, urlGTF, version){
       names(software$GenomesDB[[species]]$version) <- version
     }else{
       onames <- names(software$GenomesDB[[species]]$version)
-      software$GenomesDB[[species]]$version <- c(software$GenomesDB[[species]]$version, file.path(software$GenomesDB[[species]],version) )
+      software$GenomesDB[[species]]$version <- c(software$GenomesDB[[species]]$version,
+                                                 file.path(software$GenomesDB[[species]],version) )
       names(software$GenomesDB[[species]]$version) <- c(onames, version)
     }
 
@@ -228,8 +232,28 @@ GetGenome <- function(species, version){
 
 #' GetGenomesInDB
 #' return the available genomes in the Database
+#' @return It returns a named nested list of the available genomes per species.
+#' Inside each species slots, an slot
+#' named "main" with the main path
+#' and an slot named "version" :
+#' a named vector with each genome-annotation  directory
 #' @export
 #' @usage genome.list <- GetGenomesInDB()
+#' @examples
+#' \dontrun{
+#' genome.list <- GetGenomesInDB()
+#' genome.list
+#' $Human
+#'$Human$main
+#' [1] "/media/respaldo4t/GenomesDB/Human"
+#'
+# $Human$version
+#' GRCh38+GENECODE                                                     GRCh37+GENECODE19
+#' "/media/respaldo4t/GenomesDB/Human/GRCh38+GENECODE"                 "/media/respaldo4t/GenomesDB/Human/GRCh37+GENECODE19"
+#' <NA>
+#'   "/media/respaldo4t/GenomesDB/Human/GRCh38+GENECODE/GRCh37+GENECODE19"
+
+#' }
 GetGenomesInDB <- function(){
   databases <- GenomeDB:::.OpenConfigFile()
   gms <- names(databases$GenomesDB)[-1]
