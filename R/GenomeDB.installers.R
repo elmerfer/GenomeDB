@@ -156,12 +156,23 @@ AddGenome <- function(species, urlFasta, urlGTF, version){
 }
 
 #' AddHumanGenomes
+#' @description if any is missing, the GRCh38 assembly and the GENCODE release 38 annotation GTF is installed with version name "GRCh38+GENCODE". Else
+#' all the parameters are required
 #' @param urlFasta url for the genome fasta file
 #' @param urlGTF the url of the annotation file
 #' @param version the name of the version identifying assembly+annotation sources
-#' @usage if any is missing, the GRCh38 assembly and the GENCODE release 38 annotation GTF is installed with version name "GRCh38+GENCODE". Else
-#' all the parameters are required
+#' @usage
+#' AddHumanGenomes()
+#' AddHumanGenomes(urlFasta, urlGTF,version)
 #' @export
+#' @examples
+#' \dontrun{
+#' #To install hg19
+#' AddHumanGenomes(urlFasta = "ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_19/GRCh37.p13.genome.fa.gz",
+#'urlGTF = "ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_19/gencode.v19.annotation.gtf.gz",
+#'version = "GRCh37+GENECODE19")
+#' }
+#'
 AddHumanGenomes <- function(urlFasta, urlGTF,version){
   if(any(c(missing(urlFasta),missing(urlGTF),missing(version)))==TRUE){
     message("\n adding Human Genome GRCh38 release 104")
@@ -183,9 +194,14 @@ AddHumanGenomes <- function(urlFasta, urlGTF,version){
 
 #' GetGenome
 #' return a list with the slots fasta and gtf with the full path to the genomes and annotation files
+#' @usage GetGenome(species, version)
 #' @param specie the stored specie (Human" etc..)
 #' @param version "the assembly+annotation version/code
 #' @export
+#' @examples
+#' \dontrun{
+#' genome.annot <- GetGenome(species = "human", version = "GRCh38+GENECODE")
+#' }
 GetGenome <- function(species, version){
   databases <- GenomeDB:::.OpenConfigFile()
   if(all(version %in% names(databases$GenomesDB[[species]]$version))==FALSE){
