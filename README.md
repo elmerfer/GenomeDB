@@ -21,5 +21,8 @@ This will create a directory named
 
 and all the rest of the files and softwares (see [Aligners](https://github.com/elmerfer/Aligners), [ArribaR](https://github.com/elmerfer/ArribaR) and [RMiXCR](https://github.com/elmerfer/RMiXCR) NGS software familly)
 
+** Instalation
+see [Wiki](https://github.com/elmerfer/GenomeDB/wiki)
+
 ** Authors
 * Elmer A. Fernández
