@@ -26,3 +26,4 @@ see [Wiki](https://github.com/elmerfer/GenomeDB/wiki)
 
 ** Authors
 * Elmer A. Fernández
+* Guadalupe Nibeyro
