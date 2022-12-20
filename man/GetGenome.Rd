@@ -16,3 +16,8 @@ GetGenome(species, version)
 GetGenome
 return a list with the slots fasta and gtf with the full path to the genomes and annotation files
 }
+\examples{
+\dontrun{
+genome.annot <- GetGenome(species = "human", version = "GRCh38+GENECODE")
+}
+}

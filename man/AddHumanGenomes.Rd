@@ -4,8 +4,8 @@
 \alias{AddHumanGenomes}
 \title{AddHumanGenomes}
 \usage{
-if any is missing, the GRCh38 assembly and the GENCODE release 38 annotation GTF is installed with version name "GRCh38+GENCODE". Else
-all the parameters are required
+AddHumanGenomes()
+AddHumanGenomes(urlFasta, urlGTF,version)
 }
 \arguments{
 \item{urlFasta}{url for the genome fasta file}
@@ -15,5 +15,15 @@ all the parameters are required
 \item{version}{the name of the version identifying assembly+annotation sources}
 }
 \description{
-AddHumanGenomes
+if any is missing, the GRCh38 assembly and the GENCODE release 38 annotation GTF is installed with version name "GRCh38+GENCODE". Else
+all the parameters are required
+}
+\examples{
+\dontrun{
+#To install hg19
+AddHumanGenomes(urlFasta = "ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_19/GRCh37.p13.genome.fa.gz",
+urlGTF = "ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_19/gencode.v19.annotation.gtf.gz",
+version = "GRCh37+GENECODE19")
+}
+
 }
