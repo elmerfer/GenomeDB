@@ -22,8 +22,10 @@
 library(R.utils)
 
 #' SetDBdirectory
+#'
 #' Set GenomeDB directory for the RSAP family.
 #' It will create a directory .../main/GenomesDB, where main is "my/favorite/directory"
+#' This function should be run only once
 #' @param main directory path name
 #' @export
 #' @usage SetDBdirectory("my/preferred/path")
@@ -33,6 +35,8 @@ SetDBdirectory  <- function(main){
   software <- .OpenConfigFile()
   if(length(software)==0){##no hay directorio previo
     software$main <- main
+  }else{
+    stop("ERROR: The main directory already existe. Pls use GenomeDB:::.removeConfigFile() to remove everything")
   }
   software$GenomesDB$main <- file.path(software$main,"GenomesDB")
   if(dir.create(software$GenomesDB$main)==FALSE){
@@ -99,27 +103,23 @@ AddGenome <- function(species, urlFasta, urlGTF, version){
     if(dir.create(software$GenomesDB[[species]]$main)==FALSE){
       stop("FAIL create")
     }
-  }else{
+  }else{#el directorio de los genomas "version" ya existe
     message(paste0("\n",software$GenomesDB[[species]]$main," already exists"))
   }
 
-
-  if(dir.exists(file.path(software$GenomesDB[[species]],version))==FALSE){
-    if(is.null(software$GenomesDB[[species]]$version)){
-      software$GenomesDB[[species]]$version <- file.path(software$GenomesDB[[species]],version)
-      names(software$GenomesDB[[species]]$version) <- version
-    }else{
-      onames <- names(software$GenomesDB[[species]]$version)
-      software$GenomesDB[[species]]$version <- c(software$GenomesDB[[species]]$version,
-                                                 file.path(software$GenomesDB[[species]],version) )
-      names(software$GenomesDB[[species]]$version) <- c(onames, version)
-    }
-
-    dir.create(software$GenomesDB[[species]]$version[version])
-  }else{
-    #la version ya existe
+  ##vemos si existe la version
+  if(any(stringr::str_detect(software$GenomesDB[[species]]$version,version))==TRUE){
     stop(paste0("\nThe " , species,":",version, " already exists, pls use a different version"))
   }
+
+  ##la version no existe, la creamos
+  if(dir.create(file.path(software$GenomesDB[[species]]$main,version))==TRUE){
+    software$GenomesDB[[species]]$version <- c(software$GenomesDB[[species]]$version, file.path(software$GenomesDB[[species]]$main,version))
+    names(software$GenomesDB[[species]]$version) <- basename(software$GenomesDB[[species]]$version)
+  }else{
+    stop("Error in dir creation")
+  }
+
 
 ## we will identify the species by specie and version
   download.file(url = urlFasta,

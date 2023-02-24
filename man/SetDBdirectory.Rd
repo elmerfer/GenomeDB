@@ -2,9 +2,7 @@
 % Please edit documentation in R/GenomeDB.installers.R
 \name{SetDBdirectory}
 \alias{SetDBdirectory}
-\title{SetDBdirectory
-Set GenomeDB directory for the RSAP family.
-It will create a directory .../main/GenomesDB, where main is "my/favorite/directory"}
+\title{SetDBdirectory}
 \usage{
 SetDBdirectory("my/preferred/path")
 }
@@ -12,7 +10,7 @@ SetDBdirectory("my/preferred/path")
 \item{main}{directory path name}
 }
 \description{
-SetDBdirectory
 Set GenomeDB directory for the RSAP family.
 It will create a directory .../main/GenomesDB, where main is "my/favorite/directory"
+This function should be run only once
 }
